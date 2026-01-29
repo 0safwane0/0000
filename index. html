@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#00080f">
+    <title>رادار العقل - نظام التعلم الاستراتيجي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        :root {
+            --neon-cyan: #00ffcc;
+            --neon-red: #ff3366;
+            --neon-blue: #3366ff;
+            --neon-green: #33ff66;
+            --neon-yellow: #ffcc00;
+            --neon-purple: #cc33ff;
+            --bg-dark: #00080f;
+            --bg-light: #f5f9ff;
+            --bg-card-dark: rgba(1, 15, 25, 0.95);
+            --bg-card-light: rgba(255, 255, 255, 0.98);
+            --text-primary-dark: #ffffff;
+            --text-secondary-dark: rgba(255, 255, 255, 0.8);
+            --text-primary-light: #000814;
+            --text-secondary-light: rgba(0, 8, 20, 0.7);
+            --border-light: rgba(0, 255, 204, 0.2);
+            --shadow-glow: 0 0 20px rgba(0, 255, 204, 0.2);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --transition-fast: 150ms ease;
+            --transition-medium: 250ms ease;
+            --elite-dark: #020617;
+            --elite-blue: #3b82f6;
+            --elite-green: #34d399;
+            --elite-yellow: #fbbf24;
+            --elite-red: #f87171;
+            --elite-purple: #8b5cf6;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary-dark);
+            line-height: 1.4;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-size: 14px;
+            transition: background var(--transition-medium), color var(--transition-medium);
+        }
+
+        body.light-mode {
+            background: var(--bg-light);
+            color: var(--text-primary-light);
+        }
+
+        .app-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 12px;
+            width: 100%;
+        }
+
+        .screen {
+            display: none;
+            min-height: calc(100vh - 140px);
+            padding-top: 70px;
+            padding-bottom: 80px;
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 { font-size: 1.5rem; font-weight: 800; }
+        h2 { font-size: 1.3rem; font-weight: 700; }
+        h3 { font-size: 1.1rem; font-weight: 700; }
+        h4 { font-size: 1rem; font-weight: 600; }
+        p { font-size: 0.85rem; margin-bottom: 0.75rem; }
+        .text-small { font-size: 0.8rem; }
+        .text-xsmall { font-size: 0.75rem; }
+
+        /* ===== HEADER ===== */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 8, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .light-mode .top-header {
+            background: rgba(245, 249, 255, 0.95);
+        }
+
+        .app-title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .app-name {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            letter-spacing: 0.5px;
+        }
+
+        .app-subtitle {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .light-mode .app-subtitle {
+            color: rgba(0, 8, 20, 0.5);
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 8, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-light);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            height: 70px;
+        }
+
+        .light-mode .bottom-nav {
+            background: rgba(245, 249, 255, 0.95);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 60px;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .light-mode .nav-item {
+            color: rgba(0, 8, 20, 0.6);
+        }
+
+        .nav-item.active {
+            color: var(--neon-cyan);
+            background: rgba(0, 255, 204, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 0;
+            left: 60%;
+            background: var(--neon-red);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 900;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== RADAR SCREEN ===== */
+        .radar-container {
+            position: relative;
+            width: 100%;
+            height: 55vh;
+            min-height: 300px;
+            max-height: 450px;
+            background: radial-gradient(circle at center, rgba(0, 26, 42, 0.8) 0%, transparent 70%);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            margin: 12px 0 20px 0;
+        }
+
+        .light-mode .radar-container {
+            background: radial-gradient(circle at center, rgba(230, 244, 255, 0.9) 0%, transparent 70%);
+        }
+
+        .radar-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(0, 255, 204, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .radar-circle:nth-child(1) { width: 30%; height: 30%; }
+        .radar-circle:nth-child(2) { width: 60%; height: 60%; }
+        .radar-circle:nth-child(3) { width: 90%; height: 90%; }
+
+        /* ===== NODES ===== */
+        .node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 50;
+            transition: all var(--transition-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            user-select: none;
+            border: 2px solid;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .node:hover {
+            transform: scale(1.3);
+            z-index: 100;
+        }
+
+        .node.active {
+            transform: scale(1.5);
+            z-index: 200;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px currentColor; }
+            50% { box-shadow: 0 0 40px currentColor; }
+        }
+
+        .node-new {
+            background: var(--neon-purple);
+            border-color: var(--neon-purple);
+            color: white;
+            box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        .node-easy {
+            background: var(--neon-green);
+            border-color: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .node-medium {
+            background: var(--neon-yellow);
+            border-color: var(--neon-yellow);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-yellow);
+        }
+
+        .node-hard {
+            background: var(--neon-red);
+            border-color: var(--neon-red);
+            color: white;
+            box-shadow: 0 0 15px var(--neon-red);
+        }
+
+        .node-mastered {
+            background: var(--neon-cyan);
+            border-color: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .node-due {
+            background: var(--neon-red);
+            border-color: var(--neon-red);
+            color: white;
+            box-shadow: 0 0 20px var(--neon-red);
+            animation: duePulse 2s infinite;
+        }
+
+        @keyframes duePulse {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .node-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            font-weight: 700;
+            white-space: nowrap;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            opacity: 0.8;
+        }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .light-mode .stat-card {
+            background: rgba(0, 150, 150, 0.05);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .light-mode .stat-label {
+            color: rgba(0, 8, 20, 0.6);
+        }
+
+        /* ===== CONCEPT PANEL ===== */
+        .panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 5, 10, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-medium);
+        }
+
+        .light-mode .panel-overlay {
+            background: rgba(0, 20, 40, 0.7);
+        }
+
+        .panel-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .concept-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 95%;
+            max-width: 450px;
+            max-height: 85vh;
+            background: var(--bg-card-dark);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            border-top: 4px solid var(--neon-cyan);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 2001;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-medium);
+        }
+
+        .light-mode .concept-panel {
+            background: var(--bg-card-light);
+            border-color: rgba(0, 150, 150, 0.3);
+        }
+
+        .concept-panel.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-light);
+            background: linear-gradient(90deg, rgba(0, 255, 204, 0.1) 0%, transparent 100%);
+        }
+
+        .panel-title {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .panel-category {
+            font-size: 0.7rem;
+            color: var(--neon-cyan);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .panel-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .panel-close:hover {
+            background: var(--neon-red);
+            transform: rotate(90deg);
+        }
+
+        .panel-content {
+            padding: 16px;
+            overflow-y: auto;
+            max-height: calc(85vh - 200px);
+        }
+
+        .panel-description {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+            line-height: 1.6;
+            font-size: 0.85rem;
+        }
+
+        .light-mode .panel-description {
+            color: var(--text-secondary-light);
+        }
+
+        /* ===== TIP & DETAILS ===== */
+        .tip-section, .details-section {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            transition: all var(--transition-medium);
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .tip-section.active, .details-section.active {
+            max-height: 400px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+
+        .light-mode .tip-section,
+        .light-mode .details-section {
+            background: rgba(0, 200, 200, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: var(--neon-cyan);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .section-content {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .light-mode .section-content {
+            color: rgba(0, 8, 20, 0.8);
+        }
+
+        .details-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .details-list li {
+            position: relative;
+            padding-right: 16px;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .details-list li::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: var(--neon-cyan);
+        }
+
+        .details-list.public li::before {
+            color: var(--neon-blue);
+        }
+
+        .details-list.secret li::before {
+            color: var(--neon-red);
+        }
+
+        /* ===== RATING BUTTONS ===== */
+        .rating-buttons {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .rating-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .rating-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-hard {
+            background: var(--neon-red);
+            color: white;
+        }
+
+        .btn-medium {
+            background: var(--neon-yellow);
+            color: #000;
+        }
+
+        .btn-easy {
+            background: var(--neon-green);
+            color: #000;
+        }
+
+        /* ===== CONTROL BUTTONS ===== */
+        .panel-controls {
+            display: flex;
+            gap: 10px;
+            padding: 16px;
+            border-top: 1px solid var(--border-light);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .light-mode .panel-controls {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 14px 10px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary-dark);
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 46px;
+        }
+
+        .light-mode .control-btn {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary-light);
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 255, 204, 0.1);
+            border-color: var(--neon-cyan);
+        }
+
+        .control-btn.active {
+            background: var(--neon-cyan);
+            color: #000;
+            border-color: var(--neon-cyan);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* ===== SETTINGS ===== */
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .setting-item {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all var(--transition-fast);
+        }
+
+        .light-mode .setting-item {
+            background: rgba(0, 200, 200, 0.05);
+        }
+
+        .setting-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setting-icon {
+            font-size: 1.2rem;
+            color: var(--neon-cyan);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 204, 0.1);
+            border-radius: 50%;
+        }
+
+        .setting-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .setting-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .light-mode .setting-desc {
+            color: rgba(0, 8, 20, 0.5);
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: var(--transition-medium);
+            border-radius: 34px;
+            border: 1px solid var(--border-light);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            right: 4px;
+            bottom: 3px;
+            background-color: white;
+            transition: var(--transition-medium);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--neon-cyan);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(-26px);
+        }
+
+        /* ===== ELITE PRO APP STYLES ===== */
+        .elite-header {
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 16px;
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .elite-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .elite-supervisor {
+            font-size: 11px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .elite-app-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .elite-stats-container {
+            padding: 16px;
+            padding-top: 80px;
+        }
+
+        .elite-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .elite-stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 16px;
+            padding: 14px 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .elite-stat-label {
+            font-size: 10px;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .elite-stat-value {
+            font-size: 18px;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .elite-card-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            position: relative;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .elite-card-wrapper {
+            width: 100%;
+            max-width: 500px;
+            height: 320px;
+            perspective: 1000px;
+            margin: 20px auto;
+        }
+
+        .elite-card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 24px;
+            cursor: pointer;
+        }
+
+        .elite-card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .elite-card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .elite-card-front {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .elite-card-back {
+            background: linear-gradient(145deg, rgba(30, 58, 138, 0.8), rgba(23, 23, 23, 0.9));
+            transform: rotateY(180deg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .elite-term-title {
+            font-size: 24px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 16px;
+            color: #f8fafc;
+            line-height: 1.3;
+            padding: 0 20px;
+        }
+
+        .elite-term-description {
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: center;
+            color: #cbd5e1;
+            padding: 0 20px;
+            max-height: 180px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .elite-nav-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px 16px;
+        }
+
+        .elite-nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f8fafc;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .elite-nav-btn:active {
+            background: rgba(59, 130, 246, 0.2);
+            transform: scale(0.95);
+        }
+
+        .elite-rating-container {
+            padding: 0 16px 20px;
+        }
+
+        .elite-rating-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .elite-rating-btn {
+            height: 80px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            padding: 12px;
+        }
+
+        .elite-rating-btn:active {
+            transform: scale(0.98);
+        }
+
+        .elite-rating-btn.hard {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .elite-rating-btn.mid {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .elite-rating-btn.easy {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.2);
+            color: #34d399;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .radar-container {
+                height: 50vh;
+                min-height: 280px;
+                max-height: 400px;
+            }
+            
+            .node {
+                width: 36px;
+                height: 36px;
+                font-size: 0.65rem;
+            }
+            
+            .concept-panel {
+                width: 98%;
+                max-width: 420px;
+            }
+            
+            .panel-controls {
+                flex-direction: column;
+            }
+            
+            .control-btn {
+                min-height: 42px;
+                font-size: 0.8rem;
+            }
+            
+            .rating-buttons {
+                flex-direction: column;
+            }
+            
+            .rating-btn {
+                padding: 10px;
+            }
+            
+            .elite-card-wrapper {
+                height: 280px;
+            }
+            
+            .elite-term-title {
+                font-size: 20px;
+            }
+            
+            .elite-term-description {
+                font-size: 14px;
+            }
+            
+            .elite-rating-btn {
+                height: 70px;
+            }
+            
+            .elite-stats-grid {
+                gap: 8px;
+            }
+            
+            .elite-stat-card {
+                padding: 12px 8px;
+            }
+            
+            .elite-stat-value {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .radar-container {
+                height: 45vh;
+                min-height: 250px;
+            }
+            
+            .node {
+                width: 32px;
+                height: 32px;
+                font-size: 0.6rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-nav {
+                height: 65px;
+            }
+            
+            .nav-item {
+                min-width: 50px;
+                font-size: 0.65rem;
+            }
+            
+            .elite-card-wrapper {
+                height: 250px;
+            }
+            
+            .elite-rating-btn {
+                height: 65px;
+            }
+        }
+
+        /* Font size classes */
+        body.font-small {
+            font-size: 13px !important;
+        }
+        
+        body.font-medium {
+            font-size: 14px !important;
+        }
+        
+        body.font-large {
+            font-size: 15px !important;
+        }
+    </style>
+</head>
+<body class="font-medium">
+    <!-- Header -->
+    <header class="top-header">
+        <div class="app-title">
+            <div class="app-name">📍 رادار العقل</div>
+            <div class="app-subtitle">تحت إشراف صفوان</div>
+        </div>
+        <div class="theme-toggle">
+            <label class="switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </header>
+<!-- App Container -->
+<div class="app-container">
+    <!-- Radar Screen -->
+    <section id="radar-screen" class="screen active">
+        <div class="radar-container" id="radar-container">
+            <div class="radar-circle"></div>
+            <div class="radar-circle"></div>
+            <div class="radar-circle"></div>
+            <div id="nodes-container"></div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-concepts">16</div>
+                <div class="stat-label">إجمالي المفاهيم</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="mastered-concepts">0</div>
+                <div class="stat-label">تم إتقانها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="due-concepts">0</div>
+                <div class="stat-label">تتطلب مراجعة</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="streak-days">0</div>
+                <div class="stat-label">يوم متتالي</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review Screen -->
+    <section id="review-screen" class="screen">
+        <div id="review-content"></div>
+    </section>
+
+    <!-- Elite Pro Screen -->
+    <section id="elite-screen" class="screen">
+        <header class="elite-header">
+            <div class="elite-header-content">
+                <div class="elite-supervisor">تحت إشراف: صفوان</div>
+                <div class="elite-app-title">النخبة PRO</div>
+            </div>
+        </header>
+
+        <div class="elite-stats-container">
+            <div class="elite-stats-grid">
+                <div class="elite-stat-card">
+                    <div class="elite-stat-label">الاستيعاب</div>
+                    <div id="elite-p-val" class="elite-stat-value" style="color: #60a5fa;">0%</div>
+                </div>
+                <div class="elite-stat-card">
+                    <div class="elite-stat-label">المستوى</div>
+                    <div id="elite-level-val" class="elite-stat-value" style="color: #34d399;">مبتدئ</div>
+                </div>
+                <div class="elite-stat-card">
+                    <div class="elite-stat-label">النقاط</div>
+                    <div id="elite-s-val" class="elite-stat-value" style="color: #fbbf24;">0</div>
+                </div>
+                <div class="elite-stat-card">
+                    <div class="elite-stat-label">المتبقي</div>
+                    <div id="elite-r-val" class="elite-stat-value" style="color: #f87171;">58</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="elite-card-section">
+            <div class="elite-card-wrapper" id="elite-cardWrapper">
+                <div class="elite-card-inner" id="elite-main-card">
+                    <div class="elite-card-face elite-card-front">
+                        <div style="position: absolute; top: 16px; left: 16px; font-size: 12px; font-weight: 700; color: #60a5fa; opacity: 0.7;">
+                            CARD #<span id="elite-c-id">1</span>
+                        </div>
+                        <h2 id="elite-c-title" class="elite-term-title">تحميل البطاقة...</h2>
+                        <div style="position: absolute; bottom: 20px; color: #94a3b8; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-hand-point-up"></i>
+                            انقر لعرض التعريف
+                        </div>
+                    </div>
+                    <div class="elite-card-face elite-card-back">
+                        <p id="elite-c-desc" class="elite-term-description"></p>
+                        <div style="position: absolute; bottom: 20px; color: #94a3b8; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-star"></i>
+                            قيّم صعوبة المصطلح
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="elite-nav-controls">
+            <button class="elite-nav-btn" onclick="elitePrevCard()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            <div style="width: 20px;"></div>
+            <button class="elite-nav-btn" onclick="eliteNextCard()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+
+        <div class="elite-rating-container">
+            <div class="elite-rating-grid">
+                <button class="elite-rating-btn hard" onclick="eliteRateCard('hard')">
+                    <i class="fas fa-fire" style="font-size: 20px;"></i>
+                    <span style="font-size: 14px; font-weight: 700;">صعب</span>
+                    <span style="font-size: 11px; opacity: 0.7;">+5 نقاط</span>
+                </button>
+                <button class="elite-rating-btn mid" onclick="eliteRateCard('mid')">
+                    <i class="fas fa-balance-scale" style="font-size: 20px;"></i>
+                    <span style="font-size: 14px; font-weight: 700;">متوسط</span>
+                    <span style="font-size: 11px; opacity: 0.7;">+15 نقطة</span>
+                </button>
+                <button class="elite-rating-btn easy" onclick="eliteRateCard('easy')">
+                    <i class="fas fa-check-circle" style="font-size: 20px;"></i>
+                    <span style="font-size: 14px; font-weight: 700;">سهل</span>
+                    <span style="font-size: 11px; opacity: 0.7;">+40 نقطة</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Settings Screen -->
+    <section id="settings-screen" class="screen">
+        <div class="settings-list">
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-icon">🔊</div>
+                    <div>
+                        <div class="setting-title">الأصوات</div>
+                        <div class="setting-desc">تشغيل أصوات التفاعل</div>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="sound-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-icon">📱</div>
+                    <div>
+                        <div class="setting-title">الاهتزاز</div>
+                        <div class="setting-desc">تفعيل الاهتزاز عند التفاعل</div>
+                    </div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="haptic-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <div class="setting-icon">🔤</div>
+                    <div>
+                        <div class="setting-title">حجم الخط</div>
+                        <div class="setting-desc">ضبط حجم النص للقراءة</div>
+                    </div>
+                </div>
+                <select id="font-size-select" style="padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.1); border: 1px solid var(--border-light); color: inherit;">
+                    <option value="small">صغير</option>
+                    <option value="medium" selected>متوسط</option>
+                    <option value="large">كبير</option>
+                </select>
+            </div>
+            
+            <div class="setting-item" onclick="showResetConfirm()">
+                <div class="setting-info">
+                    <div class="setting-icon">🔄</div>
+                    <div>
+                        <div class="setting-title">إعادة التعيين</div>
+                        <div class="setting-desc">مسح جميع البيانات</div>
+                    </div>
+                </div>
+                <span>⚠️</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Concept Panel -->
+<div class="panel-overlay" id="panel-overlay"></div>
+<div class="concept-panel" id="concept-panel">
+    <div class="panel-header">
+        <div class="panel-title">
+            <div class="panel-category" id="concept-category"></div>
+            <h4 id="concept-title"></h4>
+        </div>
+        <button class="panel-close" onclick="closePanel()">✕</button>
+    </div>
+    
+    <div class="panel-content">
+        <div class="panel-description" id="concept-description"></div>
+        
+        <div class="tip-section" id="tip-section">
+            <div class="section-header">
+                <span>💡</span>
+                <h5>التلميح الاستراتيجي</h5>
+            </div>
+            <div class="section-content" id="tip-content"></div>
+        </div>
+        
+        <div class="details-section" id="details-section">
+            <div class="section-header">
+                <span>🔍</span>
+                <h5>التحليل العميق</h5>
+            </div>
+            <div class="section-content">
+                <p class="text-small"><strong>الأهداف المعلنة:</strong></p>
+                <ul class="details-list public" id="public-goals"></ul>
+                <p class="text-small mt-2"><strong>الأهداف الخفية:</strong></p>
+                <ul class="details-list secret" id="secret-goals"></ul>
+            </div>
+        </div>
+        
+        <div class="rating-buttons">
+            <button class="rating-btn btn-hard" onclick="rateConcept('hard')">
+                <span>😓</span>
+                <span>صعب</span>
+            </button>
+            <button class="rating-btn btn-medium" onclick="rateConcept('medium')">
+                <span>😐</span>
+                <span>متوسط</span>
+            </button>
+            <button class="rating-btn btn-easy" onclick="rateConcept('easy')">
+                <span>😊</span>
+                <span>سهل</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="panel-controls">
+        <button class="control-btn" id="tip-btn" onclick="toggleTip()">
+            <span>💡</span>
+            <span>عرض التلميح</span>
+        </button>
+        <button class="control-btn" id="details-btn" onclick="toggleDetails()">
+            <span>🔍</span>
+            <span>عرض التحليل</span>
+        </button>
+    </div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchScreen('radar')">
+        <span class="nav-icon">📍</span>
+        <span>الرادار</span>
+    </button>
+    
+    <button class="nav-item" onclick="switchScreen('review')">
+        <span class="nav-icon">📚</span>
+        <span class="nav-badge" id="review-badge" style="display: none;">0</span>
+        <span>للمراجعة</span>
+    </button>
+    
+    <button class="nav-item" onclick="switchScreen('elite')">
+        <span class="nav-icon">👑</span>
+        <span>النخبة PRO</span>
+    </button>
+    
+    <button class="nav-item" onclick="switchScreen('settings')">
+        <span class="nav-icon">⚙️</span>
+        <span>الإعدادات</span>
+    </button>
+</nav>
+<script>
+    // ==============================================
+    // RADAAR AL-AQL APP (Mind Radar)
+    // ==============================================
+
+    // البيانات الأساسية
+    const STRATEGIC_DATA = [
+        { id: "T1", x: 20, y: 20, title: "مبدأ ترومان 1947", description: "تحليل المساعدات لليونان وتركيا.", hint: "ركز على سياسة 'الاحتناء' وطموح السوفيات في الوصول للمنافذ البحرية.", public: ["دعم الأنظمة الحرة ضد التهديدات الخارجية.", "تقديم معونات عسكرية للحفاظ على السيادة."], secret: ["منع السوفيات من الوصول للمياه الدافئة.", "تثبيت قواعد عسكرية لمراقبة الاتحاد السوفياتي.", "تعويض النفوذ البريطاني المنسحب."], category: "المشاريع الاستراتيجية" },
+        { id: "T2", x: 35, y: 15, title: "مشروع مارشال 1947", description: "إعادة بناء أوروبا الغربية اقتصادياً.", hint: "الخبز مقابل الولاء.. كيف حاربت واشنطن الشيوعية بالدولار؟", public: ["إنعاش الاقتصاد الأوروبي بعد دمار الحرب.", "محاربة الجوع والفقر لدواعٍ إنسانية."], secret: ["السيطرة على القرار السياسي الأوروبي.", "احتواء المد الشيوعي برفع مستوى المعيشة.", "خلق سوق للمنتجات الأمريكية."], category: "المشاريع الاستراتيجية" },
+        { id: "T3", x: 15, y: 50, title: "مشروع أيزنهاور 1957", description: "الاستراتيجية الموجهة للشرق الأوسط.", hint: "تذكر 'الفراغ' الذي خلفته بريطانيا وفرنسا في المنطقة بعد العدوان الثلاثي.", public: ["دعم دول المنطقة اقتصادياً وتنموياً.", "ضمان استقرار الدول العربية."], secret: ["تطبيق نظرية ملء الفراغ الاستعماري.", "حماية المصالح النفطية وأمن إسرائيل.", "عزل الأنظمة القومية الثورية."], category: "المشاريع الاستراتيجية" },
+        { id: "T4", x: 50, y: 50, title: "النظام الدولي الجديد", description: "تحليل مرحلة الأحادية القطبية بعد 1991.", hint: "الشرعية الدولية أصبحت وسيلة لفرض الإرادة القطبية الواحدة.", public: ["احترام السيادة والشرعية الدولية.", "نشر الديمقراطية وحماية الإنسان."], secret: ["انفراد واشنطن بالقرار العالمي.", "التدخل العسكري تحت غطاء الأمم المتحدة.", "الهيمنة على الثروات الطاقوية."], category: "نهاية الصراع" },
+        { id: "T5", x: 10, y: 30, title: "انعكاسات الحرب على أوروبا", description: "تغير موازين القوى في القارة العجوز.", hint: "من قارة تقود العالم إلى قارة منقسمة رهينة للعملاقين.", public: ["انقسام أوروبا لكتلتين متصارعتين.", "ظهور الأحلاف العسكرية (الناتو ووارسو)."], secret: ["فقدان القوى التقليدية لسيادتها.", "تحول أوروبا لرهينة تحت الردع النووي.", "تبعية القرار الأوروبي للعملاقين."], category: "تحليل النتائج" },
+        { id: "T6", x: 65, y: 70, title: "العالم الثالث: ميدان الصراع", description: "أثر التجاذب الدولي على دول الجنوب.", hint: "الحروب بالوكالة.. كيف دفع الفقراء ثمن صراع الأقوياء؟", public: ["تصاعد حركات التحرر الوطني.", "نشوء حركة عدم الانحياز 1961."], secret: ["تحويل الدول النامية لساحة حروب بالوكالة.", "بقاء التبعية الاقتصادية والديون.", "استنزاف الموارد في سباق التسلح."], category: "تحليل النتائج" },
+        { id: "T7", x: 70, y: 15, title: "الانهيار الهيكلي للسوفيات", description: "لماذا سقط المعسكر الشرقي فعلياً؟", hint: "السلاح لم ينقصهم، بل الخبز والحرية والمرونة الاقتصادية.", public: ["قوة الضغط الغربي الخارجي.", "برنامج حرب النجوم الأمريكي."], secret: ["فشل النموذج الاقتصادي الموجه.", "بيروقراطية الحزب وفساد الإدارة.", "تزايد النزعات القومية داخل الاتحاد."], category: "استنتاج استراتيجي" },
+        { id: "T8", x: 20, y: 65, title: "حقيقة التعايش السلمي", description: "هل كان سلاماً حقيقياً أم هدنة اضطرارية؟", hint: "عندما يصبح السلاح أقوى من أن يُستخدم، يبدأ السلام 'المفروض'.", public: ["الرغبة في تجنب الحروب المدمرة.", "تغليب لغة الحوار الدبلوماسي."], secret: ["توازن الرعب النووي جعل الحرب انتحاراً.", "حاجة السوفيات للتنمية الداخلية.", "تغيير وسائل الصراع لا أهدافه."], category: "استنتاج استراتيجي" },
+        { id: "T9", x: 80, y: 50, title: "شلل الأمم المتحدة", description: "أسباب عجز الهيئة الدولية أثناء الحرب.", hint: "المنظمة ولدت مقيدة بـ 'خمسة أصوات' تملك حق تعطيل العالم.", public: ["نقص الموارد المالية واللوجستية."], secret: ["سيطرة القطبين عبر حق الفيتو.", "تحول المنظمة لوسيلة تبرير للمصالح.", "غياب الإرادة الدولية المستقلة."], category: "استنتاج استراتيجي" },
+        { id: "T10", x: 15, y: 15, title: "سباق غزو الفضاء", description: "الأهداف البعيدة للتنافس العلمي.", hint: "الصواريخ كانت 'رسائل مشفرة' لقدرات نووية قادمة من السماء.", public: ["تطوير العلم لخدمة البشرية."], secret: ["تطوير الصواريخ الباليستية النووية.", "التجسس الفضائي العالي الدقة.", "إثبات التفوق الإيديولوجي للعالم."], category: "أدوات الصراع" },
+        { id: "T11", x: 85, y: 65, title: "توازن الردع النووي", description: "كيف حفظ السلاح الفتاك السلام العالمي؟", hint: "السلام ليس في غياب السلاح، بل في يقين الدمار المشترك.", public: ["الخوف المشترك من نهاية الحضارة."], secret: ["تحول السلاح النووي لأداة ضغط سياسي.", "فرض حالة الجمود العسكري (MAD).", "تجنب المواجهة المباشرة تماماً."], category: "مفاهيم القوى" },
+        { id: "T12", x: 30, y: 80, title: "مؤتمر باندونغ 1955", description: "انبعاث صوت العالم الثالث.", hint: "بداية الوعي بأن الجنوب لا يجب أن يكون تابعاً للشرق أو الغرب.", public: ["دعم استقلال الشعوب المستعمرة."], secret: ["كسر احتكار القطبين للقرار الدولي.", "محاولة تشكيل تكتل محايد وازن."], category: "حركات التحرر" },
+        { id: "T13", x: 55, y: 75, title: "حركة عدم الانحياز", description: "الفلسفة والواقعية السياسية للحركة.", hint: "الحياد الإيجابي: أن تكون مؤثراً دون أن تكون منضوياً تحت حلف.", public: ["الحياد الإيجابي ورفض القواعد."], secret: ["محاولة التخلص من الهيمنة الاقتصادية.", "الضغط الأخلاقي لإنهاء سباق التسلح."], category: "حركات التحرر" },
+        { id: "T14", x: 10, y: 45, title: "أزمة الصواريخ بكوبا", description: "ذروة التوتر الدولي 1962.", hint: "العالم كان على بعد 'زر واحد' من الفناء.. فتعلموا التفاوض.", public: ["خطر صواريخ نووية قرب السواحل."], secret: ["إرغام الطرفين على التفاوض المباشر.", "بداية مرحلة الانفراج الدولي الحقيقي.", "تثبيت الخط الأحمر الهاتفي."], category: "الأزمات الكبرى" },
+        { id: "T15", x: 90, y: 30, title: "جدار برلين 1961", description: "تجسيد الستار الحديدي مادياً.", hint: "الجدار لم يكن لحماية الناس، بل لمنعهم من اختيار الطرف الآخر.", public: ["حماية الشرق من التسلل الغربي."], secret: ["الاعتراف الضمني بفشل الإقناع الشيوعي.", "تثبيت حدود مناطق النفوذ في أوروبا."], category: "الأزمات الكبرى" },
+        { id: "T16", x: 50, y: 10, title: "اتفاقيات سالت (SALT)", description: "بداية تقنين الرعب النووي.", hint: "التركيز على 'جودة' السلاح بدلاً من 'كميته' المنهكة اقتصادياً.", public: ["السعي للحد من أسلحة الدمار."], secret: ["تخفيف الأعباء المالية المنهكة.", "ضمان التفوق التكنولوجي النوعي."], category: "تحولات استراتيجية" }
+    ];
+
+    // المتغيرات العامة لتطبيق الرادار
+    let userState = {
+        id: '',
+        progress: {},
+        preferences: {
+            sound: true,
+            haptic: true,
+            darkMode: true,
+            fontSize: 'medium'
+        },
+        stats: {
+            streak: 0,
+            lastActive: null
+        }
+    };
+    
+    let currentConcept = null;
+    let audioContext = null;
+
+    // ==============================================
+    // ELITE PRO APP
+    // ==============================================
+
+    const ELITE_APP_DATA = [
+        { term: "الثنائية القطبية", definition: "نظام دولي ظهر بعد الحرب العالمية الثانية، يعتمد على وجود قطبين متصارعين هما المعسكر الشرقي والغربي." },
+        { term: "الحرب الباردة", definition: "صراع إيديولوجي ومصلحي بين المعسكرين استُخدمت فيه جميع الوسائل عدا المواجهة العسكرية المباشرة." },
+        { term: "سياسة الاحتواء", definition: "خطة أمريكية تعتمد على محاصرة الاتحاد السوفياتي بسلسلة من الأحلاف والقواعد العسكرية ومنع انتشار الشيوعية." },
+        { term: "مشروع مارشال", definition: "مساعدات اقتصادية أمريكية لإعادة بناء أوروبا 1947 بهدف ربط اقتصادها بالمعسكر الغربي." },
+        { term: "مبدأ ترومان", definition: "مساعدات مالية وعسكرية قدمتها أمريكا للدول المهددة من الزحف الشيوعي عام 1947." },
+        { term: "الكوميكون", definition: "منظمة اقتصادية للمعسكر الشرقي تأسست في 1949 بهدف التعاون الاقتصادي بين دول الكتلة." },
+        { term: "التعايش السلمي", definition: "سياسة دعا إليها خروشوف عام 1956 تقوم على قبول فكرة تعدد الأنظمة وتجنب الصدام النووي." },
+        { term: "مؤتمر الصومام", definition: "لقاء تنظيمي في 20 أوت 1956 هيكل الثورة عسكرياً وسياسياً وأقر مبدأ أولوية الداخل." },
+        { term: "سياسة الإغراء", definition: "مشاريع اقتصادية فرنسية تهدف لعزل الشعب عن الثورة عبر تحسين الظروف المعيشية." },
+        { term: "القوة الثالثة", definition: "فئة من الجزائريين الموالين لفرنسا حاولت فرنسا استخدامهم كبديل لجبهة التحرير." },
+        { term: "مشروع قسنطينة", definition: "مشروع إغرائي استعماري أعلنه ديغول عام 1958 لإفراغ الثورة من محتواها الاجتماعي." },
+        { term: "سلم الشجعان", definition: "مناورة سياسية أطلقها ديغول عام 1958 يطالب فيها الثوار بتسليم أسلحتهم مقابل العفو." },
+        { term: "حق تقرير المصير", definition: "مبدأ ينص على حق الشعوب الخاضعة للاستعمار في اختيار نظامها السياسي ومصيرها." },
+        { term: "منظمة الوحدة الإفريقية", definition: "منظمة تأسست عام 1963 لتعزيز التعاون بين دول القارة ومحاربة الاستعمار." },
+        { term: "حركة عدم الانحياز", definition: "تجمع دولي تأسس عام 1961 تبنى الحياد الإيجابي تجاه صراع الحرب الباردة." },
+        { term: "النظام الدولي", definition: "مجموعة القواعد والمبادئ التي تسير العلاقات الدولية في جميع المجالات، يتغير عادة بعد الأحداث الهامة المؤثرة مثل الحرب العالمية الثانية." },
+        { term: "الاتحاد السوفياتي", definition: "دولة شيوعية سادت منطقة أوراسيا بين 1922-1991، ضمت عدة جمهوريات أبرزها روسيا الوريث الشرعي للاتحاد السوفياتي بعد زواله." },
+        { term: "الإيديولوجية", definition: "مجموعة الآراء والأفكار والعقائد والفلسفات التي يؤمن بها شعب أو أمة أو حزب أو جماعة مثل الإيديولوجية الشيوعية والرأسمالية." },
+        { term: "الاشتراكية", definition: "نظام اقتصادي يقوم على الملكية الجماعية لوسائل الإنتاج، مناهض للرأسمالية، طبق في روسيا بعد نجاح الثورة البلشفية عام 1917." },
+        { term: "الشيوعية", definition: "أقصى مراحل الاشتراكية، وهي نظام شامل يقوم على مبدأ الحزب الواحد والملكية الجماعية والمساواة الاجتماعية والإلحاد." },
+        { term: "الرأسمالية", definition: "نظام اقتصادي ذو فلسفة سياسية اجتماعية يقوم على التعددية الحزبية والملكية الفردية لوسائل الإنتاج وحرية المنافسة." },
+        { term: "الإمبريالية", definition: "أقصى مراحل الرأسمالية، وهي سيطرة دولة قوية أو مجموعة دول على دولة ضعيفة بواسطة القوة العسكرية والسياسية والاقتصادية." },
+        { term: "هيئة الأمم المتحدة", definition: "منظمة دولية تأسست في 24 أكتوبر 1945، مقرها نيويورك، تضم 193 دولة، هدفها حفظ السلم والأمن الدوليين وترقية التعاون." },
+        { term: "التحالف الظرفي", definition: "التحالف المؤقت، وهو ما كان بين الو م أ و ا س خلال الحرب العالمية الثانية، تحول إلى عداء بمجرد نهاية الحرب وزوال العدو المشترك (ألمانيا)." },
+        { term: "الصراع الإيديولوجي", definition: "صراع فكري عقائدي، أطلق على الصراع الذي دار بين النظام الشيوعي بزعامة ا س والنظام الرأسمالي بزعامة و م أ خلال الحرب الباردة." },
+        { term: "اتفاقية بريتون وودز", definition: "اتفاقية منبثقة عن مؤتمر بريتون وودز المنعقد في و م أ جويلية 1944، وضعت أسس النظام المالي العالمي الجديد (صندوق النقد والبنك الدولي)." },
+        { term: "المعسكر الشرقي", definition: "مجموعة الدول الشيوعية مثل: الصين، كوبا، كوريا الشمالية، وأوروبا الشرقية... يتزعمهم ويقودهم الاتحاد السوفياتي." },
+        { term: "المعسكر الغربي", definition: "مجموعة الدول الرأسمالية مثل: فرنسا، بريطانيا، كندا... تتزعمهم وتقودهم الولايات المتحدة الأمريكية." },
+        { term: "الستار الحديدي", definition: "مصطلح أطلقه ونستون تشرشل مجازاً على الحد الفاصل بين أوروبا الشرقية والغربية والعزلة التي فرضها الاتحاد السوفياتي على دوله." },
+        { term: "سياسة ملئ الفراغ", definition: "سياسة استعمارية تبنتها الو م أ في عهد أيزنهاور تقوم على استخلاف القوى التقليدية (فرنسا وبريطانيا) عند انسحابها من مستعمراتها." },
+        { term: "سياسة التطويق", definition: "سياسة جاء بها الرئيس ترومان تقوم على محاصرة المد الشيوعي بمجموعة من الأحلاف والقواعد العسكرية مثل حلف الناتو." },
+        { term: "الليبرالية", definition: "مذهب فكري رأسمالي ينادي بالحرية المطلقة في مختلف الميادين خاصة السياسية منها والاقتصادية والتخلص من كل القيود." },
+        { term: "مشروع أيزنهاور", definition: "مشروع سياسي أمريكي (1957) يقضي بتقديم مساعدات مالية وعسكرية لدول الشرق الأوسط لصد المد الشيوعي وحماية إسرائيل." },
+        { term: "الشرق الأوسط", definition: "مصطلح جغرافي سياسي تطلقه الدول الغربية على المنطقة الممتدة بين إيران شرقاً ومصر غرباً وتركيا شمالاً واليمن جنوباً." },
+        { term: "سياسة التكتل", definition: "سياسة تعني تجمع دولتين أو أكثر تربط بينهم اتفاقيات سياسية أو عسكرية أو اقتصادية لزيادة قوتهم." },
+        { term: "سياسة الأحلاف", definition: "تنظيمات عسكرية لجأ إليها المعسكران إبان الحرب الباردة كحلف الناتو ووارسو، تجمع الدول بمعاهدات دفاعية مشتركة." },
+        { term: "الديمقراطيات الشعبية", definition: "دول أوروبا الشرقية (مثل بولونيا، المجر، رومانيا) التي تبنت النظام الشيوعي ودارت في فلك الاتحاد السوفياتي." },
+        { term: "مجلس الأمن", definition: "أبرز هياكل الأمم المتحدة، يتكون من 15 عضواً (5 دائمون يملكون الفيتو و10 ينتخبون دورياً)، مهتمه حفظ الأمن والسلم." },
+        { term: "حق الفيتو", definition: "حق الاعتراض والنقض الذي تتمتع به الدول الخمس الدائمة في مجلس الأمن، ويؤدي استعماله لإلغاء أي قرار." },
+        { term: "البيت الأبيض", definition: "المقر الرسمي لرئاسة الولايات المتحدة الأمريكية بالعاصمة واشنطن، يستمد اسمه من لونه الأبيض." },
+        { term: "الكرملين", definition: "كلمة روسية تعني 'القلعة الحصينة'، وهو مقر الرئاسة السوفياتية (والروسية حالياً) في موسكو." },
+        { term: "الكونغرس", definition: "الهيئة التشريعية في الولايات المتحدة الأمريكية، يتكون من مجلسين: مجلس الشيوخ ومجلس النواب." },
+        { term: "الأزمة", definition: "مرحلة حرجة وخطيرة في العلاقات الدولية، قد تؤدي إلى اندلاع حرب إذا لم يتم احتواؤها." },
+        { term: "الأزمات الدولية", definition: "المراحل الحرجة التي وصل فيها الصراع بين العملاقين ذروته وكاد يؤدي لمواجهة عسكرية (مثل أزمة كوبا وبرلين)." },
+        { term: "صراع النفوذ", definition: "رغبة كل معسكر في فرض سيطرته وهيمنته على أكبر عدد من دول العالم وتوسيع مجاله الحيوي." },
+        { term: "خليج الخنازير", definition: "خليج يقع في كوبا، شهد محاولة إنزال عسكري فاشلة لقلب نظام فيدل كاسترو عام 1961." },
+        { term: "عملية خليج الخنازير", definition: "محاولة انقلابية فاشلة قام بها منفيون كوبيون بدعم من المخابرات الأمريكية (CIA) ضد نظام كاسترو." },
+        { term: "الخط الهاتفي الأحمر", definition: "خط اتصال مباشر بين واشنطن وموسكو أنشئ بعد أزمة كوبا (1963) لتسهيل التواصل وتجنب الحرب النووية." },
+        { term: "الانفراج الدولي", definition: "مرحلة تحسن العلاقات وزوال التوتر الشديد بين المعسكرين، خاصة بعد أزمة الصواريخ الكوبية." },
+        { term: "حرب النجوم", definition: "برنامج دفاعي أمريكي (SDI) يعتمد على نشر أسلحة متطورة في الفضاء لاعتراض الصواريخ السوفياتية." },
+        { term: "السلاح النووي", definition: "سلاح دمار شامل يعتمد على التفاعل النووي، استخدمته أمريكا ضد اليابان، وكان وسيلة ردع في الحرب الباردة." },
+        { term: "اتفاقية سالت 1 و 2", definition: "معاهدات للحد من الأسلحة الاستراتيجية (النووية) وقعت بين الو م أ والاتحاد السوفياتي في 1972 و 1979." },
+        { term: "توازن الرعب النووي", definition: "توازن عسكري ناتج عن امتلاك الطرفين لأسلحة دمار شامل تجعل استحالة قضاء طرف على الآخر دون تدمير نفسه." },
+        { term: "العالم الثالث", definition: "مصطلح أطلقه ألفريد سوفي (1952) على الدول حديثة الاستقلال في إفريقيا وآسيا وأمريكا اللاتينية المتخلفة اقتصادياً." },
+        { term: "الحياد الإيجابي", definition: "سياسة تبنتها حركة عدم الانحياز تعني عدم الميل لأي كتلة مع مناصرة القضايا العادلة وحق الشعوب في التحرر." },
+        { term: "مؤتمر باندونغ", definition: "مؤتمر تضامني عقد في إندونيسيا (1955) للدول الأفرو-آسيوية، مهد لتأسيس حركة عدم الانحياز." },
+        { term: "التضامن الأفروآسيوي", definition: "التقارب والتعاون بين شعوب قارتي إفريقيا وآسيا لمواجهة الاستعمار ومشاكل التنمية." },
+        { term: "الأحادية القطبية", definition: "نظام دولي ظهر بعد 1991 تميز بانفراد الولايات المتحدة الأمريكية بقيادة العالم وتوجيه العلاقات الدولية." },
+        { term: "البروسترويكا", definition: "كلمة روسية تعني 'إعادة البناء'، وهي إصلاحات اقتصادية جذرية أطلقها غورباتشوف وأدت لتفكك الاتحاد السوفياتي." },
+        { term: "الغلاسنوست", definition: "كلمة روسية تعني 'الشفافية'، وهي سياسة الانفتاح الإعلامي والسياسي التي تبناها غورباتشوف." },
+        { term: "مؤتمر مالطا", definition: "لقاء قمة جمع بوش الأب وغورباتشوف (1989) تم فيه الاتفاق على إنهاء الحرب الباردة." },
+        { term: "مؤتمر باريس", definition: "مؤتمر عقد في 1990 وقعت فيه الدول الأوروبية وأمريكا والسوفيات ميثاق الأمن الأوروبي وأعلن نهاية الحرب الباردة رسمياً." },
+        { term: "مؤتمر ألما آتا", definition: "مؤتمر عقد في كازاخستان (ديسمبر 1991) أعلن فيه رسمياً حل الاتحاد السوفياتي وظهور رابطة الدول المستقلة." },
+        { term: "النظام الدولي الجديد", definition: "مفهوم أمريكي برز بعد حرب الخليج (1991) يهدف لإعادة صياغة العلاقات الدولية وفق المنظور والمصالح الأمريكية." },
+        { term: "الشرعية الدولية", definition: "الالتزام بمواثيق وقرارات المنظمات الدولية (خاصة الأمم المتحدة) واعتبارها المرجع الوحيد في حل النزاعات." },
+        { term: "المنظمات العالمية", definition: "منظمات مفتوحة العضوية لجميع دول العالم، تسعى لتنظيم التعاون الدولي مثل الأمم المتحدة ومنظمة التجارة." },
+        { term: "المنظمات غير الحكومية", definition: "منظمات مستقلة عن الدول، تنشط في المجالات الإنسانية والحقوقية والبيئية (مثل الصليب الأحمر وهيومن رايتس)." },
+        { term: "الأنظمة الرجعية", definition: "أنظمة حكم تقليدية موالية للاستعمار وترفض التغيير والتحرر، اعتمدت عليها القوى الكبرى لخدمة مصالحها." }
+    ];
+
+    // حالة تطبيق النخبة PRO
+    let eliteState = {
+        currentCardIndex: 0,
+        score: 0,
+        reviewedCards: 0,
+        difficultyStats: {
+            hard: 0,
+            mid: 0,
+            easy: 0
+        },
+        achievements: [
+            { id: 'first_card', name: 'البداية', icon: 'fa-star', unlocked: false },
+            { id: 'fast_learner', name: 'متسارع', icon: 'fa-bolt', unlocked: false },
+            { id: 'elite', name: 'نخبة', icon: 'fa-trophy', unlocked: false }
+        ]
+    };
+
+    // ==============================================
+    // GENERAL FUNCTIONS
+    // ==============================================
+
+    // التهيئة العامة
+    document.addEventListener('DOMContentLoaded', function() {
+        initApp();
+        initEliteApp();
+        setupEventListeners();
+        renderRadarNodes();
+        updateUI();
+    });
+
+    function initApp() {
+        loadUserState();
+        applyPreferences();
+        
+        if (!userState.id) {
+            userState.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            saveUserState();
+        }
+        
+        if (!localStorage.getItem('mindRadar_welcomed')) {
+            setTimeout(() => {
+                alert('مرحباً بك في رادار العقل!\nانقر على النقاط لاستكشاف المفاهيم الاستراتيجية.');
+                localStorage.setItem('mindRadar_welcomed', 'true');
+            }, 500);
+        }
+    }
+
+    function loadUserState() {
+        const saved = localStorage.getItem('mindRadar_userState');
+        if (saved) {
+            userState = JSON.parse(saved);
+        }
+    }
+
+    function saveUserState() {
+        userState.stats.lastActive = new Date().toISOString();
+        localStorage.setItem('mindRadar_userState', JSON.stringify(userState));
+    }
+
+    // ==============================================
+    // RADAAR AL-AQL FUNCTIONS
+    // ==============================================
+
+    function renderRadarNodes() {
+        const container = document.getElementById('nodes-container');
+        container.innerHTML = '';
+        
+        STRATEGIC_DATA.forEach(data => {
+            const node = document.createElement('div');
+            node.className = 'node';
+            
+            const progress = userState.progress[data.id];
+            if (!progress) {
+                node.classList.add('node-new');
+            } else if (progress.difficulty === 'easy') {
+                node.classList.add('node-easy');
+            } else if (progress.difficulty === 'medium') {
+                node.classList.add('node-medium');
+            } else if (progress.difficulty === 'hard') {
+                node.classList.add('node-hard');
+            } else {
+                node.classList.add('node-new');
+            }
+            
+            if (progress && isDue(progress)) {
+                node.classList.add('node-due');
+            }
+            
+            node.style.left = data.x + '%';
+            node.style.top = data.y + '%';
+            node.textContent = data.id.replace('T', '');
+            
+            const label = document.createElement('div');
+            label.className = 'node-label';
+            label.textContent = data.title.split(' ')[0];
+            node.appendChild(label);
+            
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                openConceptPanel(data, node);
+            });
+            
+            container.appendChild(node);
+        });
+    }
+
+    function isDue(progress) {
+        if (!progress.nextReview) return true;
+        const now = new Date();
+        const dueDate = new Date(progress.nextReview);
+        return dueDate <= now;
+    }
+
+    function openConceptPanel(data, nodeElement) {
+        currentConcept = data;
+        
+        document.getElementById('concept-title').textContent = data.title;
+        document.getElementById('concept-category').textContent = data.category;
+        document.getElementById('concept-description').textContent = data.description;
+        document.getElementById('tip-content').textContent = data.hint;
+        
+        const publicList = document.getElementById('public-goals');
+        const secretList = document.getElementById('secret-goals');
+        
+        publicList.innerHTML = data.public.map(goal => `<li>${goal}</li>`).join('');
+        secretList.innerHTML = data.secret.map(goal => `<li>${goal}</li>`).join('');
+        
+        document.getElementById('tip-section').classList.remove('active');
+        document.getElementById('details-section').classList.remove('active');
+        document.getElementById('tip-btn').classList.remove('active');
+        document.getElementById('details-btn').classList.remove('active');
+        
+        document.getElementById('panel-overlay').classList.add('active');
+        document.getElementById('concept-panel').classList.add('active');
+        
+        playSound('open');
+    }
+
+    function closePanel() {
+        document.getElementById('panel-overlay').classList.remove('active');
+        document.getElementById('concept-panel').classList.remove('active');
+        currentConcept = null;
+        playSound('close');
+    }
+
+    function toggleTip() {
+        const tipSection = document.getElementById('tip-section');
+        const tipBtn = document.getElementById('tip-btn');
+        
+        tipSection.classList.toggle('active');
+        tipBtn.classList.toggle('active');
+        
+        playSound('toggle');
+    }
+
+    function toggleDetails() {
+        const detailsSection = document.getElementById('details-section');
+        const detailsBtn = document.getElementById('details-btn');
+        
+        detailsSection.classList.toggle('active');
+        detailsBtn.classList.toggle('active');
+        
+        playSound('toggle');
+    }
+
+    function rateConcept(difficulty) {
+        if (!currentConcept) return;
+        
+        const now = new Date();
+        const progress = userState.progress[currentConcept.id] || {
+            ease: 2.5,
+            interval: 0,
+            reviewCount: 0,
+            difficulty: 'new'
+        };
+        
+        progress.lastSeen = now.toISOString();
+        progress.reviewCount++;
+        progress.difficulty = difficulty;
+        
+        let intervalDays;
+        switch(difficulty) {
+            case 'easy':
+                intervalDays = progress.interval * 2.5 || 7;
+                progress.ease = Math.min(progress.ease + 0.1, 3.0);
+                break;
+            case 'medium':
+                intervalDays = progress.interval * 1.5 || 3;
+                break;
+            case 'hard':
+                intervalDays = 1;
+                progress.ease = Math.max(progress.ease - 0.2, 1.3);
+                break;
+        }
+        
+        const nextReview = new Date(now);
+        nextReview.setDate(nextReview.getDate() + intervalDays);
+        progress.nextReview = nextReview.toISOString();
+        progress.interval = intervalDays;
+        
+        userState.progress[currentConcept.id] = progress;
+        saveUserState();
+        
+        updateUI();
+        renderRadarNodes();
+        
+        const messages = {
+            easy: 'ممتاز! لقد أتقنت هذا المفهوم.',
+            medium: 'جيد! سأذكرك بهذا المفهوم لاحقاً.',
+            hard: 'لا بأس! سأظهره لك مجدداً قريباً.'
+        };
+        
+        setTimeout(() => {
+            alert(messages[difficulty]);
+            closePanel();
+        }, 300);
+    }
+
+    function updateUI() {
+        const total = STRATEGIC_DATA.length;
+        const mastered = Object.values(userState.progress).filter(p => p.difficulty === 'easy').length;
+        const due = Object.values(userState.progress).filter(p => isDue(p)).length;
+        const streak = userState.stats.streak || 0;
+        
+        document.getElementById('total-concepts').textContent = total;
+        document.getElementById('mastered-concepts').textContent = mastered;
+        document.getElementById('due-concepts').textContent = due;
+        document.getElementById('streak-days').textContent = streak;
+        
+        const badge = document.getElementById('review-badge');
+        if (due > 0) {
+            badge.textContent = due > 9 ? '9+' : due;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+        
+        updateReviewScreen();
+    }
+
+    function updateReviewScreen() {
+        const reviewContent = document.getElementById('review-content');
+        const dueConcepts = STRATEGIC_DATA.filter(data => {
+            const progress = userState.progress[data.id];
+            return progress && isDue(progress);
+        });
+        
+        if (dueConcepts.length === 0) {
+            reviewContent.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;">🎉</div>
+                    <h3>لا توجد مفاهيم للمراجعة</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin: 10px 0 20px 0;">جميع المفاهيم محدثة!</p>
+                    <button onclick="switchScreen('radar')" style="background: var(--neon-cyan); color: #000; border: none; padding: 12px 24px; border-radius: var(--radius-md); font-weight: bold; cursor: pointer;">
+                        العودة للرادار
+                    </button>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = '<div style="padding: 10px;">';
+        html += '<h3 style="margin-bottom: 20px;">المفاهيم التي تحتاج مراجعة</h3>';
+        
+        dueConcepts.forEach(concept => {
+            const progress = userState.progress[concept.id];
+            html += `
+                <div style="background: rgba(0,255,204,0.05); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 15px; margin-bottom: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <h4 style="flex: 1; padding-right: 10px;">${concept.title}</h4>
+                        <span style="background: ${getDifficultyColor(progress.difficulty)}; color: ${progress.difficulty === 'medium' ? '#000' : '#fff'}; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;">
+                            ${getDifficultyText(progress.difficulty)}
+                        </span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-bottom: 15px;">${concept.description.substring(0, 80)}...</p>
+                    <button onclick="openConceptForReview('${concept.id}')" style="background: var(--neon-cyan); color: #000; border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-weight: bold; cursor: pointer; width: 100%;">
+                        مراجعة المفهوم
+                    </button>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        reviewContent.innerHTML = html;
+    }
+
+    function getDifficultyColor(difficulty) {
+        switch(difficulty) {
+            case 'easy': return 'var(--neon-green)';
+            case 'medium': return 'var(--neon-yellow)';
+            case 'hard': return 'var(--neon-red)';
+            default: return 'var(--neon-purple)';
+        }
+    }
+
+    function getDifficultyText(difficulty) {
+        switch(difficulty) {
+            case 'easy': return 'سهل';
+            case 'medium': return 'متوسط';
+            case 'hard': return 'صعب';
+            default: return 'جديد';
+        }
+    }
+
+    function openConceptForReview(conceptId) {
+        const concept = STRATEGIC_DATA.find(c => c.id === conceptId);
+        const node = document.querySelector(`.node[style*="${concept.x}%"]`);
+        if (concept && node) {
+            openConceptPanel(concept, node);
+        }
+    }
+
+    function switchScreen(screenName) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        document.getElementById(`${screenName}-screen`).classList.add('active');
+        
+        const navButton = document.querySelector(`.nav-item[onclick*="${screenName}"]`);
+        if (navButton) {
+            navButton.classList.add('active');
+        }
+        
+        if (screenName === 'elite') {
+            updateEliteUI();
+        }
+        
+        playSound('switch');
+    }
+
+    function setupEventListeners() {
+        document.getElementById('panel-overlay').addEventListener('click', closePanel);
+        
+        document.getElementById('theme-toggle').addEventListener('change', function() {
+            userState.preferences.darkMode = !this.checked;
+            applyPreferences();
+        });
+        
+        document.getElementById('sound-toggle').addEventListener('change', function() {
+            userState.preferences.sound = this.checked;
+            saveUserState();
+        });
+        
+        document.getElementById('haptic-toggle').addEventListener('change', function() {
+            userState.preferences.haptic = this.checked;
+            saveUserState();
+        });
+        
+        document.getElementById('font-size-select').addEventListener('change', function() {
+            userState.preferences.fontSize = this.value;
+            applyPreferences();
+            saveUserState();
+        });
+        
+        // إضافة حدث النقر للبطاقة في تطبيق النخبة
+        const eliteCard = document.getElementById('elite-main-card');
+        if (eliteCard) {
+            eliteCard.addEventListener('click', function() {
+                eliteCard.classList.toggle('flipped');
+                playSound(300, 150);
+                vibrate(30);
+            });
+        }
+    }
+        function applyPreferences() {
+            if (userState.preferences.darkMode) {
+                document.body.classList.remove('light-mode');
+                document.getElementById('theme-toggle').checked = false;
+            } else {
+                document.body.classList.add('light-mode');
+                document.getElementById('theme-toggle').checked = true;
+            }
+            
+            // تطبيق حجم الخط
+            document.body.classList.remove('font-small', 'font-medium', 'font-large');
+            document.body.classList.add(`font-${userState.preferences.fontSize}`);
+            
+            document.getElementById('font-size-select').value = userState.preferences.fontSize;
+            document.getElementById('sound-toggle').checked = userState.preferences.sound;
+            document.getElementById('haptic-toggle').checked = userState.preferences.haptic;
+            
+            saveUserState();
+        }
+
+        function playSound(type) {
+            if (!userState.preferences.sound) return;
+            
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                const frequencies = {
+                    open: 800,
+                    close: 400,
+                    toggle: 600,
+                    switch: 500
+                };
+                
+                oscillator.frequency.setValueAtTime(frequencies[type] || 440, audioContext.currentTime);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+                
+                if (userState.preferences.haptic && 'vibrate' in navigator) {
+                    navigator.vibrate(50);
+                }
+            } catch(e) {
+                console.log('لا يمكن تشغيل الصوت');
+            }
+        }
+
+        function showResetConfirm() {
+            if (confirm('⚠️ هل أنت متأكد من إعادة التعيين؟ سيتم حذف جميع بياناتك.')) {
+                localStorage.clear();
+                alert('تم إعادة التعيين. سيتم إعادة تحميل الصفحة.');
+                location.reload();
+            }
+        }
+
+        // ==============================================
+        // ELITE PRO FUNCTIONS
+        // ==============================================
+
+        function initEliteApp() {
+            const saved = localStorage.getItem('elite_pro_data');
+            if (saved) {
+                try {
+                    eliteState = JSON.parse(saved);
+                } catch (e) {
+                    console.log('خطأ في تحميل بيانات النخبة PRO');
+                }
+            }
+            updateEliteUI();
+        }
+
+        function saveEliteData() {
+            localStorage.setItem('elite_pro_data', JSON.stringify(eliteState));
+        }
+
+        function updateEliteUI() {
+            const card = ELITE_APP_DATA[eliteState.currentCardIndex];
+            
+            if (!card) return;
+            
+            document.getElementById('elite-c-title').textContent = card.term;
+            document.getElementById('elite-c-desc').textContent = card.definition;
+            document.getElementById('elite-c-id').textContent = eliteState.currentCardIndex + 1;
+            
+            const percentage = Math.round((eliteState.reviewedCards / ELITE_APP_DATA.length) * 100);
+            document.getElementById('elite-p-val').textContent = percentage + '%';
+            document.getElementById('elite-s-val').textContent = eliteState.score;
+            document.getElementById('elite-r-val').textContent = ELITE_APP_DATA.length - eliteState.reviewedCards;
+            
+            updateEliteLevel();
+        }
+
+        function updateEliteLevel() {
+            let level = "مبتدئ";
+            let color = "#f87171";
+            
+            if (eliteState.score >= 1000) {
+                level = "خبير";
+                color = "#8b5cf6";
+            } else if (eliteState.score >= 500) {
+                level = "متقدم";
+                color = "#3b82f6";
+            } else if (eliteState.score >= 200) {
+                level = "متوسط";
+                color = "#34d399";
+            } else if (eliteState.score >= 50) {
+                level = "مبتدئ";
+                color = "#fbbf24";
+            }
+            
+            document.getElementById('elite-level-val').textContent = level;
+            document.getElementById('elite-level-val').style.color = color;
+        }
+
+        function elitePrevCard() {
+            eliteState.currentCardIndex--;
+            if (eliteState.currentCardIndex < 0) {
+                eliteState.currentCardIndex = ELITE_APP_DATA.length - 1;
+            }
+            
+            document.getElementById('elite-main-card').classList.remove('flipped');
+            updateEliteUI();
+            
+            playSound(200, 100);
+            vibrate(20);
+        }
+
+        function eliteNextCard() {
+            eliteState.currentCardIndex++;
+            if (eliteState.currentCardIndex >= ELITE_APP_DATA.length) {
+                eliteState.currentCardIndex = 0;
+            }
+            
+            document.getElementById('elite-main-card').classList.remove('flipped');
+            updateEliteUI();
+            
+            playSound(250, 100);
+            vibrate(20);
+        }
+
+        function eliteRateCard(difficulty) {
+            eliteState.difficultyStats[difficulty]++;
+            
+            let points = 0;
+            let message = '';
+            
+            switch(difficulty) {
+                case 'hard':
+                    points = 5;
+                    message = 'صعب! +5 نقاط';
+                    break;
+                case 'mid':
+                    points = 15;
+                    message = 'متوسط! +15 نقطة';
+                    break;
+                case 'easy':
+                    points = 40;
+                    message = 'سهل! +40 نقطة 🎉';
+                    eliteState.reviewedCards++;
+                    break;
+            }
+            
+            eliteState.score += points;
+            
+            alert(message);
+            
+            playSound(difficulty === 'easy' ? 600 : 400, 300);
+            vibrate(50);
+            
+            checkEliteAchievements();
+            
+            setTimeout(() => {
+                eliteNextCard();
+                saveEliteData();
+            }, 300);
+        }
+
+        function checkEliteAchievements() {
+            if (eliteState.reviewedCards >= 1 && !eliteState.achievements[0].unlocked) {
+                unlockEliteAchievement(0);
+            }
+            
+            if (eliteState.score >= 500 && !eliteState.achievements[2].unlocked) {
+                unlockEliteAchievement(2);
+            }
+        }
+
+        function unlockEliteAchievement(index) {
+            if (eliteState.achievements[index].unlocked) return;
+            
+            eliteState.achievements[index].unlocked = true;
+            eliteState.score += 100;
+            
+            alert(`🏆 إنجاز مفتوح: ${eliteState.achievements[index].name}!`);
+            
+            playSound(800, 1000);
+            playSound(1000, 800);
+            
+            saveEliteData();
+        }
+
+        function vibrate(duration) {
+            if (navigator.vibrate && userState.preferences.haptic) {
+                try {
+                    navigator.vibrate(duration);
+                } catch (error) {}
+            }
+        }
+
+        // تعريف الدوال العاملة
+        window.switchScreen = switchScreen;
+        window.openConceptPanel = openConceptPanel;
+        window.closePanel = closePanel;
+        window.toggleTip = toggleTip;
+        window.toggleDetails = toggleDetails;
+        window.rateConcept = rateConcept;
+        window.showResetConfirm = showResetConfirm;
+        window.openConceptForReview = openConceptForReview;
+        window.elitePrevCard = elitePrevCard;
+        window.eliteNextCard = eliteNextCard;
+        window.eliteRateCard = eliteRateCard;
+    </script>
+</body>
+</html>
